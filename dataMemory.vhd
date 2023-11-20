@@ -1,4 +1,4 @@
---RichiSoft
+--richi Soft
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
@@ -8,8 +8,6 @@ entity dataMemory is
     port(
         address : in STD_LOGIC_VECTOR(63 downto 0);
         writeData : in STD_LOGIC_VECTOR(31 downto 0);
-        memWrite : in STD_LOGIC;
-        memRead : in STD_LOGIC;
         readData : out STD_LOGIC_VECTOR(31 downto 0)
     );
 end dataMemory;
@@ -35,13 +33,11 @@ signal memory: localidad := (
     x"00000000"
 );
 begin
-    process(address, memWrite, memRead, writeData)
+    process(address, writeData)
     begin
-        if memWrite = '1' then
+        if writeData /= x"00000000" then
             memory(CONV_INTEGER(address(5 downto 2))) <= writeData;
         end if;
-        if memRead = '1' then
-            readData <= memory(CONV_INTEGER(address(5 downto 2)));
-        end if;
+        readData <= memory(CONV_INTEGER(address(5 downto 2)));
     end process;
 end dataMemory;
