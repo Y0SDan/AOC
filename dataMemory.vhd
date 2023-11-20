@@ -6,6 +6,7 @@ use IEEE.STD_LOGIC_unsigned.all;
 
 entity dataMemory is
     port(
+        clk : in STD_LOGIC; -- Add clk as input
         address : in STD_LOGIC_VECTOR(63 downto 0);
         writeData : in STD_LOGIC_VECTOR(31 downto 0);
         memWrite : in STD_LOGIC;
@@ -35,13 +36,14 @@ signal memory: localidad := (
     x"0000000000000000", x"0000000000000000", x"0000000000000000", x"0000000000000000"
 );
 begin
-    process(address, memWrite, memRead, writeData)
+    process(clk) -- Use clk in your process
     begin
-        if memWrite = '1' then
-            memory(CONV_INTEGER(address(5 downto 2))) <= writeData;
-        end if;
-        if memRead = '1' then
+        if rising_edge(clk) and memRead = '1' then
+            -- Read on rising edge of clk
             readData <= memory(CONV_INTEGER(address(5 downto 2)));
+        elsif falling_edge(clk) and memWrite = '1' then
+            -- Write on falling edge of clk
+            memory(CONV_INTEGER(address(5 downto 2))) <= writeData;
         end if;
     end process;
 end dataMemory;
